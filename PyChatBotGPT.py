@@ -21,7 +21,7 @@ CORS(app)
 model_engine = "gpt-4"
 model_prompt = "You are GPT-4, a large language model trained by OpenAI. Help answer questions and engage in conversation."
 chat_history = []
-max_history_tokens = 1500
+max_history_tokens = 2000
 
 #save history function
 def save_history(chat_history, filename='history.json'):
@@ -45,7 +45,7 @@ def generate_response(prompt, model_engine, chat_history):
                 {"role": "system", "content": model_prompt},
                 {"role": "user", "content": f"{conversation}User: {prompt}"}
             ],
-            max_tokens=1500,
+            max_tokens=2000,
             temperature=0.5,
             top_p=1,
             frequency_penalty=0,
