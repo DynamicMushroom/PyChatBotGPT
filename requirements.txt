@@ -1,0 +1,4 @@
+Flask==[version]
+openai==[version]
+python-dotenv==[version]
+flask-cors==[version]
