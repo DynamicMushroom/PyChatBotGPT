@@ -1,4 +1,4 @@
-Flask==[version]
-openai==[version]
-python-dotenv==[version]
-flask-cors==[version]
+Flask==[]
+openai==[]
+python-dotenv==[]
+flask-cors==[]
