@@ -79,4 +79,4 @@ if __name__ == "__main__":
     except FileNotFoundError:
         pass
     
-    app.run(debug=True)
+    app.run(port=3000)
