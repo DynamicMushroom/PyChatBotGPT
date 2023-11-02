@@ -8,6 +8,8 @@ from flask_cors import CORS
 
 # Load environment variables
 load_dotenv()
+
+#Enter your dotenv file name with your API key
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
 # Setup logging
@@ -15,7 +17,7 @@ logging.basicConfig(filename='chat.log', level=logging.INFO)
 
 # Flask and CORS app setup
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/ask": {"orifins": "*"}})
 
 
 model_engine = "gpt-4"
@@ -27,10 +29,12 @@ max_history_tokens = 2000
 def save_history(chat_history, filename='history.json'):
     with open(filename, 'w') as f:
         json.dump(chat_history, f)
+        
  #Load history function
 def load_history(filename='history.json'):
     with open(filename, 'r') as f:
         return json.load(f)
+    
 #Response
 def generate_response(prompt, model_engine, chat_history):
     if not prompt.strip():
