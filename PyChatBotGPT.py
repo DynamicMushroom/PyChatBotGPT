@@ -17,7 +17,7 @@ logging.basicConfig(filename='chat.log', level=logging.INFO)
 
 # Flask and CORS app setup
 app = Flask(__name__)
-CORS(app, resources={r"/ask": {"orifins": "*"}})
+CORS(app, resources={r"/ask": {"origins": "*"}})
 
 
 model_engine = "gpt-4"
