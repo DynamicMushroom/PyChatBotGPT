@@ -3,3 +3,4 @@ werkzeug==2.2.2
 openai==0.28.1
 python-dotenv==1.0.0
 flask-cors==3.0.10
+boto3==1.28.71
