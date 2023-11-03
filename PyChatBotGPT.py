@@ -33,7 +33,7 @@ max_history_tokens = 2000
 def save_history(chat_history):
     s3.put_object(
         Body=json.dumps(chat_history),
-        Bucket="cyclic-eager-battledress-yak-us-east-1",  # Replace with your actual bucket name
+        Bucket="cyclic-eager-battledress-yak-us-east-1",  
         Key="chat_history/my_chat_history.json"
     )
         
@@ -41,7 +41,7 @@ def save_history(chat_history):
 def load_history():
     try:
         my_file = s3.get_object(
-            Bucket="cyclic-eager-battledress-yak-us-east-1",  # Replace with your actual bucket name
+            Bucket="cyclic-eager-battledress-yak-us-east-1",  
             Key="chat_history/my_chat_history.json"
         )
         return json.loads(my_file['Body'].read())
