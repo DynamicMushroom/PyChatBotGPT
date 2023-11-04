@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 import os
 import openai
 import json
@@ -18,7 +18,7 @@ openai.api_key = os.getenv("OPENAI_API_KEY")
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 # Flask and CORS app setup
-app = Flask(__name__)
+app = Flask(__name__, static_folder='build', static_url_path='/')
 CORS(app, resources={r"/ask": {"origins": "*"}})
 
 # AWS S3 Setup (configured for Cyclic's S3 storage)
@@ -78,6 +78,10 @@ def generate_response(prompt, model_engine, chat_history):
     
     return text
 
+@app.route('/')
+def index():
+    return send_from_directory(app.static_folder, 'index.html')
+
 # Flask route to handle POST requests
 @app.route('/ask', methods=['POST'])
 def ask():
@@ -86,7 +90,9 @@ def ask():
     save_history(chat_history)  # Save the updated chat history to S3
     return jsonify({'response': response})
 
+
 # Main block to run the Flask app
 if __name__ == "__main__":
     chat_history = load_history()  # Load chat history from S3
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 3000)))
+
