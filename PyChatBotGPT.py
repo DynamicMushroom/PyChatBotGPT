@@ -3,39 +3,52 @@ import os
 import openai
 import json
 import logging
+import boto3
 from dotenv import load_dotenv
 from flask_cors import CORS
+import sys
 
 # Load environment variables
 load_dotenv()
 
-#Enter your dotenv file name with your API key
+# Enter your dotenv file name with your API key
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
-# Setup logging
-logging.basicConfig(filename='chat.log', level=logging.INFO)
+# Setup logging to console instead of a file
+logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 # Flask and CORS app setup
 app = Flask(__name__)
 CORS(app, resources={r"/ask": {"origins": "*"}})
 
+# AWS S3 Setup (configured for Cyclic's S3 storage)
+s3 = boto3.client('s3')
 
 model_engine = "gpt-4"
 model_prompt = "You are GPT-4, a large language model trained by OpenAI. Help answer questions and engage in conversation."
 chat_history = []
 max_history_tokens = 2000
 
-#save history function
-def save_history(chat_history, filename='history.json'):
-    with open(filename, 'w') as f:
-        json.dump(chat_history, f)
+# Save history function
+def save_history(chat_history):
+    s3.put_object(
+        Body=json.dumps(chat_history),
+        Bucket="cyclic-eager-battledress-yak-us-east-1",  
+        Key="chat_history/my_chat_history.json"
+    )
         
- #Load history function
-def load_history(filename='history.json'):
-    with open(filename, 'r') as f:
-        return json.load(f)
+# Load history function
+def load_history():
+    try:
+        my_file = s3.get_object(
+            Bucket="cyclic-eager-battledress-yak-us-east-1",  
+            Key="chat_history/my_chat_history.json"
+        )
+        return json.loads(my_file['Body'].read())
+    except s3.exceptions.NoSuchKey:
+        return []
     
-#Response
+# Response
 def generate_response(prompt, model_engine, chat_history):
     if not prompt.strip():
         return ""
@@ -70,13 +83,10 @@ def generate_response(prompt, model_engine, chat_history):
 def ask():
     user_input = request.form['user_input']
     response = generate_response(user_input, model_engine, chat_history)
+    save_history(chat_history)  # Save the updated chat history to S3
     return jsonify({'response': response})
 
 # Main block to run the Flask app
 if __name__ == "__main__":
-    try:
-        chat_history = load_history()
-    except FileNotFoundError:
-        pass
-    
-    app.run(port=3000)
+    chat_history = load_history()  # Load chat history from S3
+    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 3000)))
