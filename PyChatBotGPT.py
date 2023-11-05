@@ -78,8 +78,9 @@ def generate_response(prompt, model_engine, chat_history):
     
     return text
 #Start React 
-@app.route('/')
-def index():
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def catch_all(path):
     return send_from_directory(app.static_folder, 'index.html')
 
 # Flask route to handle POST requests
