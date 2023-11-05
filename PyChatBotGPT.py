@@ -94,5 +94,5 @@ def ask():
 # Main block to run the Flask app
 if __name__ == "__main__":
     chat_history = load_history()  # Load chat history from S3
-    app.run(host='0.0.0.0', port=int(os.getenv('PORT', 3000)))
+    app.run(host='0.0.0.0', port=int(os.getenv("PORT", 3000)))
 
