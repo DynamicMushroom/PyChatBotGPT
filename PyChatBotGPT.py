@@ -77,7 +77,7 @@ def generate_response(prompt, model_engine, chat_history):
         logging.error(text)
     
     return text
-
+#Start React 
 @app.route('/')
 def index():
     return send_from_directory(app.static_folder, 'index.html')
