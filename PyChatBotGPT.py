@@ -18,7 +18,7 @@ openai.api_key = os.getenv("OPENAI_API_KEY")
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 # Flask and CORS app setup
-app = Flask(__name__, static_folder='src', static_url_path='/')
+app = Flask(__name__, static_folder='dist', static_url_path='/')
 CORS(app, resources={r"/ask": {"origins": "*"}})
 
 # AWS S3 Setup (configured for Cyclic's S3 storage)
