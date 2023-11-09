@@ -78,9 +78,14 @@ def generate_response(prompt, model_engine, chat_history):
     
     return text
 #Start React 
-@app.route('https://ruby-stormy-bonobo.cyclic.app', methods=['GET'])
-def index():
-    return send_from_directory(app.static_folder, 'index.html')
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def catch_all(path):
+    if path and os.path.exists(os.path.join(app.static_folder, path)):
+        return send_from_directory(app.static_folder, path)
+    else:
+        return send_from_directory(app.static_folder, 'index.html')
+
 
 # Flask route to handle POST requests
 @app.route('/ask', methods=['POST'])
