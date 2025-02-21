@@ -1,4 +1,4 @@
-Flask==2.1.2
+Flask==2.2.5
 werkzeug==3.0.6
 openai==0.28.1
 python-dotenv==1.0.0
